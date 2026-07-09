@@ -30,7 +30,7 @@ classifiers = [
 ]
 
 [project.scripts]
-dfe = "data_forensics_auditor.cli:main"
+dfa = "data_forensics_auditor.cli:main"
 data-forensics-auditor = "data_forensics_auditor.cli:main"
 
 [project.optional-dependencies]
