@@ -170,6 +170,8 @@ class Auditor:
 
         for col in numeric_cols:
             role = file_spec.columns.get(col, {}).get("role")
+            if str(role).lower() == "ignore":
+                continue
             values = pd.to_numeric(df[col], errors="coerce")
             if values.notna().sum() < 8:
                 continue
