@@ -47,7 +47,8 @@ files:
         control_titles = [f.title for f in findings if f.column == "heterogeneous_metric"]
         if not any("Outlier" in title for title in control_titles):
             raise AssertionError(
-                f"Positive control failed: outlier not detected on measurement role ({control_titles})"
+                "Positive control failed: outlier not detected on "
+                f"measurement role ({control_titles})"
             )
 
         # Regression: role ignore -> the same column must produce no findings.
@@ -63,9 +64,7 @@ files:
         )
         ignored_findings = [f.title for f in findings if f.column == "heterogeneous_metric"]
         if ignored_findings:
-            raise AssertionError(
-                f"role: ignore column still produced findings: {ignored_findings}"
-            )
+            raise AssertionError(f"role: ignore column still produced findings: {ignored_findings}")
         if code != 0:
             raise AssertionError(f"Expected exit 0 with ignored column, got {code}")
 
