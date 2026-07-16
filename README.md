@@ -26,13 +26,13 @@ uv sync --extra dev
 Run the CLI from the managed environment:
 
 ```sh
-uv run data-forensics-audit --manifest manifest.yaml --out audit_output
+uv run dfa --manifest manifest.yaml --out audit_output
 ```
 
-The shorter compatibility command also works:
+The long-form command also works:
 
 ```sh
-uv run audit --manifest manifest.yaml --out audit_output
+uv run data-forensics-auditor --manifest manifest.yaml --out audit_output
 ```
 
 ### With pip
@@ -53,17 +53,18 @@ py -m venv .venv
 python -m pip install -e ".[dev]"
 ```
 
-Then run either entry point:
+Then use any supported invocation:
 
 ```sh
-data-forensics-audit --manifest manifest.yaml --out audit_output
+dfa --manifest manifest.yaml --out audit_output
+data-forensics-auditor --manifest manifest.yaml --out audit_output
 python -m data_forensics_auditor --manifest manifest.yaml --out audit_output
 ```
 
 ## Usage
 
 ```sh
-data-forensics-audit --manifest manifest.yaml --out audit_output
+dfa --manifest manifest.yaml --out audit_output
 ```
 
 Outputs:
@@ -80,7 +81,7 @@ Default behaviour:
 Use `--fail-on glance` for a stricter run:
 
 ```sh
-data-forensics-audit --manifest manifest.yaml --out audit_output --fail-on glance
+dfa --manifest manifest.yaml --out audit_output --fail-on glance
 ```
 
 Hard input failures are independent of `--fail-on`. They include unreadable files,
