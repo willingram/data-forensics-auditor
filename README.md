@@ -165,6 +165,21 @@ uv run ruff check .
 uv run ruff format .
 ```
 
+To validate the publishable artifacts without uploading them, start with no
+stale files in `dist/`, then run:
+
+```sh
+uv sync --extra dev --frozen
+uv run --frozen python -m build
+uv run --frozen twine check --strict dist/*
+uv run --frozen python scripts/inspect_distribution.py dist
+```
+
+These commands build and inspect a wheel and source distribution locally. They
+do not upload to PyPI or any other package index. CI additionally installs the
+wheel in an isolated environment outside the source tree and smoke-tests every
+supported command.
+
 With pip:
 
 ```sh
