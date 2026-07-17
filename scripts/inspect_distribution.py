@@ -26,6 +26,17 @@ EXPECTED_ENTRY_POINTS = {
     "data-forensics-auditor": "data_forensics_auditor.cli:main",
     "dfa": "data_forensics_auditor.cli:main",
 }
+SDIST_REQUIRED_ROOT_FILES = {
+    "CHANGELOG.md",
+    "CONTRIBUTING.md",
+    "DESIGN.md",
+    "LICENSE",
+    "MANIFEST.in",
+    "README.md",
+    "SECURITY.md",
+    "pyproject.toml",
+    "scripts/inspect_distribution.py",
+}
 
 FORBIDDEN_COMPONENTS = {
     ".git",
@@ -312,13 +323,7 @@ def wheel_errors(archive: Archive, repository: Path, name: str, version: str) ->
 def sdist_errors(archive: Archive, repository: Path, name: str, version: str) -> list[str]:
     errors: list[str] = []
     root = f"{normalized_name(name, wheel=True)}-{version}"
-    required = {
-        "LICENSE",
-        "MANIFEST.in",
-        "README.md",
-        "pyproject.toml",
-        "scripts/inspect_distribution.py",
-    }
+    required = set(SDIST_REQUIRED_ROOT_FILES)
     required.update(source_files(repository, PACKAGE))
     required.update(source_files(repository, "tests"))
 

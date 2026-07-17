@@ -201,6 +201,11 @@ python tests/smoke_shape_c.py
 
 ## Repository Notes
 
+- See `CONTRIBUTING.md` for development and validation guidance.
+- See `DESIGN.md` for current contracts, architecture, and limitations.
+- See `SECURITY.md` for supported versions, private reporting guidance, and the
+  threat model.
+- See `CHANGELOG.md` for notable unreleased changes.
 - Generated files such as `__pycache__`, build artifacts, virtual environments,
   and local audit reports are ignored by Git.
 - Licensed under the MIT License. See `LICENSE`.

@@ -1,6 +1,11 @@
 from pathlib import Path
 
-from scripts.inspect_distribution import Archive, path_errors, residue_errors
+from scripts.inspect_distribution import (
+    SDIST_REQUIRED_ROOT_FILES,
+    Archive,
+    path_errors,
+    residue_errors,
+)
 
 
 def archive(kind: str, names: tuple[str, ...]) -> Archive:
@@ -66,3 +71,12 @@ def test_sdist_requires_single_top_level_directory() -> None:
         "outside its single top-level directory" in error
         for error in residue_errors(candidate, root)
     )
+
+
+def test_sdist_contract_requires_governance_documents() -> None:
+    assert {
+        "CHANGELOG.md",
+        "CONTRIBUTING.md",
+        "DESIGN.md",
+        "SECURITY.md",
+    } <= SDIST_REQUIRED_ROOT_FILES
