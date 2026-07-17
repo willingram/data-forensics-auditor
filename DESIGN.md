@@ -126,6 +126,10 @@ validate independently. `scripts/inspect_distribution.py` enforces required
 members, metadata and entry points, portable member paths, and absence of
 common credentials, local path markers, and build/test residue.
 
+Both artifacts publish exact project links for the homepage, source repository,
+issue tracker, and changelog. Those four labels and destinations are validated
+as package metadata rather than inferred from the checkout.
+
 Artifact inspection is a release preflight, not a general archive-security or
 malware scan. Building and validating distributions does not publish them.
 

@@ -20,6 +20,8 @@ work is recorded under `Unreleased` without implying publication to PyPI.
 - Wheel and source-distribution builds, strict metadata validation, adversarial
   artifact-content inspection, and isolated installed-command smoke tests.
 - Contribution, design, security, and changelog documentation.
+- Exact package metadata links for the project homepage, source repository,
+  issue tracker, and changelog.
 
 ### Changed
 

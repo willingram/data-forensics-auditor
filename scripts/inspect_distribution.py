@@ -26,6 +26,12 @@ EXPECTED_ENTRY_POINTS = {
     "data-forensics-auditor": "data_forensics_auditor.cli:main",
     "dfa": "data_forensics_auditor.cli:main",
 }
+EXPECTED_PROJECT_URLS = {
+    "Homepage": "https://github.com/willingram/data-forensics-auditor",
+    "Repository": "https://github.com/willingram/data-forensics-auditor",
+    "Issues": "https://github.com/willingram/data-forensics-auditor/issues",
+    "Changelog": ("https://github.com/willingram/data-forensics-auditor/blob/main/CHANGELOG.md"),
+}
 SDIST_REQUIRED_ROOT_FILES = {
     "CHANGELOG.md",
     "CONTRIBUTING.md",
@@ -246,6 +252,28 @@ def metadata_values(payload: bytes) -> tuple[str | None, str | None]:
     return metadata.get("Name"), metadata.get("Version")
 
 
+def project_url_errors(payload: bytes, metadata_name: str) -> list[str]:
+    metadata = BytesParser().parsebytes(payload)
+    actual: dict[str, str] = {}
+    errors: list[str] = []
+    for raw_value in metadata.get_all("Project-URL", []):
+        label, separator, url = str(raw_value).partition(",")
+        label = label.strip()
+        url = url.strip()
+        if not separator or not label or not url:
+            errors.append(f"{metadata_name} contains malformed Project-URL: {raw_value!r}")
+            continue
+        if label in actual:
+            errors.append(f"{metadata_name} contains duplicate Project-URL label: {label!r}")
+            continue
+        actual[label] = url
+    if actual != EXPECTED_PROJECT_URLS:
+        errors.append(
+            f"{metadata_name} Project-URLs are {actual!r}, expected {EXPECTED_PROJECT_URLS!r}"
+        )
+    return errors
+
+
 def wheel_errors(archive: Archive, repository: Path, name: str, version: str) -> list[str]:
     errors: list[str] = []
     dist_info = f"{normalized_name(name, wheel=True)}-{version}.dist-info"
@@ -272,6 +300,7 @@ def wheel_errors(archive: Archive, repository: Path, name: str, version: str) ->
             errors.append(f"wheel METADATA Name is {actual_name!r}, expected {name!r}")
         if actual_version != version:
             errors.append(f"wheel METADATA Version is {actual_version!r}, expected {version!r}")
+        errors.extend(project_url_errors(archive.files[metadata_path], "wheel METADATA"))
 
     entry_points_path = f"{dist_info}/entry_points.txt"
     if entry_points_path in archive.files:
@@ -341,6 +370,7 @@ def sdist_errors(archive: Archive, repository: Path, name: str, version: str) ->
             errors.append(f"sdist PKG-INFO Name is {actual_name!r}, expected {name!r}")
         if actual_version != version:
             errors.append(f"sdist PKG-INFO Version is {actual_version!r}, expected {version!r}")
+        errors.extend(project_url_errors(archive.files[pkg_info], "sdist PKG-INFO"))
     return errors
 
 

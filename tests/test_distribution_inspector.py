@@ -1,9 +1,11 @@
 from pathlib import Path
 
 from scripts.inspect_distribution import (
+    EXPECTED_PROJECT_URLS,
     SDIST_REQUIRED_ROOT_FILES,
     Archive,
     path_errors,
+    project_url_errors,
     residue_errors,
 )
 
@@ -80,3 +82,53 @@ def test_sdist_contract_requires_governance_documents() -> None:
         "DESIGN.md",
         "SECURITY.md",
     } <= SDIST_REQUIRED_ROOT_FILES
+
+
+def test_project_url_contract_accepts_only_the_exact_four_urls() -> None:
+    payload = _metadata_with_urls(EXPECTED_PROJECT_URLS)
+
+    assert project_url_errors(payload, "wheel METADATA") == []
+    assert project_url_errors(payload, "sdist PKG-INFO") == []
+
+
+def test_project_url_contract_rejects_missing_wrong_and_extra_urls() -> None:
+    missing = dict(EXPECTED_PROJECT_URLS)
+    missing.pop("Issues")
+    wrong = dict(EXPECTED_PROJECT_URLS)
+    wrong["Repository"] = "https://example.invalid/wrong"
+    extra = {**EXPECTED_PROJECT_URLS, "Documentation": "https://example.invalid/docs"}
+
+    for urls in (missing, wrong, extra):
+        errors = project_url_errors(_metadata_with_urls(urls), "METADATA")
+        assert any("Project-URLs are" in error for error in errors)
+
+
+def test_project_url_contract_rejects_malformed_and_duplicate_labels() -> None:
+    exact_lines = [f"Project-URL: {label}, {url}" for label, url in EXPECTED_PROJECT_URLS.items()]
+    payload = (
+        "\n".join(
+            [
+                "Metadata-Version: 2.4",
+                *exact_lines,
+                exact_lines[0],
+                "Project-URL: malformed",
+                "",
+                "",
+            ]
+        )
+    ).encode()
+
+    errors = project_url_errors(payload, "METADATA")
+
+    assert any("duplicate Project-URL label" in error for error in errors)
+    assert any("malformed Project-URL" in error for error in errors)
+
+
+def _metadata_with_urls(urls: dict[str, str]) -> bytes:
+    lines = [
+        "Metadata-Version: 2.4",
+        *(f"Project-URL: {label}, {url}" for label, url in urls.items()),
+        "",
+        "",
+    ]
+    return "\n".join(lines).encode()

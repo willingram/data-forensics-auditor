@@ -29,6 +29,12 @@ classifiers = [
   "Topic :: Software Development :: Quality Assurance",
 ]
 
+[project.urls]
+Homepage = "https://github.com/willingram/data-forensics-auditor"
+Repository = "https://github.com/willingram/data-forensics-auditor"
+Issues = "https://github.com/willingram/data-forensics-auditor/issues"
+Changelog = "https://github.com/willingram/data-forensics-auditor/blob/main/CHANGELOG.md"
+
 [project.scripts]
 dfa = "data_forensics_auditor.cli:main"
 data-forensics-auditor = "data_forensics_auditor.cli:main"
