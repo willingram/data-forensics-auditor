@@ -83,7 +83,8 @@ jobs:
         run: python -m venv "$RUNNER_TEMP/dfa-wheel-smoke"
 
       - name: Install wheel with runtime dependencies
-        run: "$RUNNER_TEMP/dfa-wheel-smoke/bin/python" -m pip install dist/*.whl
+        run: |
+          "$RUNNER_TEMP/dfa-wheel-smoke/bin/python" -m pip install dist/*.whl
 
       - name: Smoke-test installed commands outside source tree
         working-directory: ${{ runner.temp }}
