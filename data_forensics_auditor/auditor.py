@@ -10,7 +10,7 @@ import numpy as np
 import pandas as pd
 
 from .io import read_table
-from .models import Finding, Manifest
+from .models import LOUDNESS_ORDER, Finding, Manifest
 
 STOP_WORDS = {
     "with",
@@ -1219,11 +1219,11 @@ def _changepoint_loudness(effect: float) -> str:
 
 
 def _fails_threshold(loudness: str, fail_on: str) -> bool:
-    if fail_on == "GLANCE":
-        return loudness in {"GLANCE", "STANDARD"}
-    if fail_on == "STANDARD":
-        return loudness == "STANDARD"
-    return False
+    try:
+        return LOUDNESS_ORDER[loudness] >= LOUDNESS_ORDER[fail_on]
+    except KeyError:
+        # CLI choices are validated; internal callers fail closed on unknown values.
+        return True
 
 
 def _kendall_tau(x: np.ndarray, y: np.ndarray) -> tuple[float, float]:

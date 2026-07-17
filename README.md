@@ -78,7 +78,8 @@ Default behaviour:
 - exits `2` when any `UNINTENDED` finding is `STANDARD` or louder
 - always exits non-zero for hard input failures
 
-Use `--fail-on glance` for a stricter run:
+Use `--fail-on glance` to fail only on the most immediately visible `GLANCE`
+findings:
 
 ```sh
 dfa --manifest manifest.yaml --out audit_output --fail-on glance
@@ -118,11 +119,13 @@ cross_checks:
   - {kind: exact, left: "fileA.csv:col", right: "fileB.csv:col", key: date}
 ```
 
-Supported tabular inputs:
+Tabular input handling:
 
 - `.csv`
 - `.tsv`
-- `.xlsx`, `.xlsm`, `.xls`
+- `.xlsx`, `.xlsm` (supported by the base installation through openpyxl)
+- `.xls` is recognized and delegated to pandas, but requires a separately
+  installed compatible engine and is not guaranteed by the base dependencies
 
 Common column roles:
 
